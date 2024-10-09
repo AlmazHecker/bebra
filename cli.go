@@ -5,8 +5,10 @@ import (
 	"os"
 
 	"bebra/commands"
+	"bebra/config"
 	"bebra/flags"
 )
+
 
 func printUsage() {
 	fmt.Println("Usage: bebra <command> [OPTIONS]")
@@ -19,9 +21,9 @@ func printUsage() {
 }
 
 func main() {
-	// Check if we have at least one argument (for the command)
+	config.GetConfig()
 	if len(os.Args) < 2 {
-		printUsage()
+		// printUsage()
 		os.Exit(1)
 	}
 
