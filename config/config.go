@@ -1,7 +1,7 @@
 package config
 
 import (
-	"encoding/json"
+	"bebra/helpers"
 	"fmt"
 	"os"
 )
@@ -18,17 +18,24 @@ func GetConfig() {
 	if err != nil {
 		fmt.Println("Error opening file:", err)
 	}
-
 	defer file.Close()
 
 	var config Config
-
-    // Decode the JSON data into the struct
-	decoder := json.NewDecoder(file)
-	if err := decoder.Decode(&config); err != nil {
-		fmt.Println("Error decoding JSON:", err)
-		return
+	if err := helpers.JSONDecoder(file, &config); err != nil {
+		fmt.Println(err)
 	}
+
+	
+	fmt.Println("DECODED JSON", config.Adb)
+
+    // // Decode the JSON data into the struct
+	// decoder := json.NewDecoder(file)
+	// if err := decoder.Decode(&config); err != nil {
+	// 	fmt.Println("Error decoding JSON:", err)
+	// 	return
+	// }
+
+
 
 	fmt.Printf("apktool: %s\nAdb: %s\nbuildtools: %s\n", config.Apktool, config.Adb, config.BuildTools)
 }

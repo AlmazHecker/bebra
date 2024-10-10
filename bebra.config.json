@@ -1,5 +1,5 @@
 {
-  "apktool": "C:\\Users\\Almaz\\Desktop\\programming\\mobile\\apktool",
-  "adb": "C:\\adb\\adb.exe",
-  "buildTools": "D:\\Android\\Sdk\\build-tools\\35.0.0"
+  "apktool": "/usr/local/bin/apktool",
+  "adb": "/usr/bin/adb",
+  "buildTools": "~/Android/Sdk/build-tools/35.0.0"
 }
