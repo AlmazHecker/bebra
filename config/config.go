@@ -13,10 +13,11 @@ type Config struct {
 	BuildTools string `json:"buildTools,omitempty"`
 }
 
-func GetConfig() Config {
-	file, err := os.Open("bebra.config.json");
+func GetConfig(configPath string) Config {
+	file, err := os.Open(configPath);
 	if err != nil {
-		panic(fmt.Errorf("Error opening file: %w", err))
+		fmt.Println("Error opening file: %w", err)
+		os.Exit(1)
 	}
 	defer file.Close()
 

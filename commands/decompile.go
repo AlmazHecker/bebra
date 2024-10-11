@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"bebra/config"
 	"bebra/helpers"
 	"fmt"
 
@@ -20,6 +21,10 @@ func decompileHanlder(cmd *cobra.Command, args []string) {
     if !helpers.FileExists(configPath) {
         println("Config is not defined! Define bebra.config.json file")
     } 
+
+    conf := config.GetConfig(configPath)
+	fmt.Println(conf)
+
 	fmt.Println("Decompiling the application...")
 	fmt.Println("Using config path:", configPath)
 }
