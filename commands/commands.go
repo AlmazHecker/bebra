@@ -2,14 +2,23 @@ package commands
 
 import (
 	"fmt"
+
+	"github.com/spf13/cobra"
 )
 
-// HandleCommand processes the main command (like bebra)
-func HandleCommand(command string) {
-	switch command {
-	case "bebra":
-		fmt.Println("Bebra command executed!")
-	default:
-		fmt.Printf("Unknown command: %s\n", command)
-	}
+var rootCmd = &cobra.Command{
+    Use:   "bebra",
+    Short: "A command-line application",
+}
+
+func Init() {
+    rootCmd.AddCommand(compileCmd)
+    rootCmd.AddCommand(decompileCmd)
+}
+
+func Execute() {
+    if err := rootCmd.Execute(); err != nil {
+        fmt.Println(err)
+        return
+    }
 }
