@@ -10,32 +10,50 @@ import (
 type Config struct {
 	Apktool    string `json:"apktool,omitempty"`
 	Adb        string `json:"adb,omitempty"`
-	BuildTools string `json:"buildTools"`
+	BuildTools string `json:"buildTools,omitempty"`
 }
 
-func GetConfig() {
+func GetConfig() Config {
 	file, err := os.Open("bebra.config.json");
 	if err != nil {
-		fmt.Println("Error opening file:", err)
+		panic(fmt.Errorf("Error opening file: %w", err))
 	}
 	defer file.Close()
 
+
 	var config Config
-	if err := helpers.JSONDecoder(file, &config); err != nil {
-		fmt.Println(err)
+	helpers.JSONDecoder(file, &config)
+
+	var defaultConfig = getDefaultConfig()
+
+	if !helpers.FileExists(config.Adb) {
+		fmt.Printf("ADB not found, setting to default: %s\n", defaultConfig.Adb)
+		config.Adb = defaultConfig.Adb
 	}
 
-	
-	fmt.Println("DECODED JSON", config.Adb)
+	if !helpers.FileExists(config.Apktool) {
+		fmt.Printf("APKTool not found, setting to default: %s\n", defaultConfig.Apktool)
+		config.Apktool = defaultConfig.Apktool
+	}
 
-    // // Decode the JSON data into the struct
-	// decoder := json.NewDecoder(file)
-	// if err := decoder.Decode(&config); err != nil {
-	// 	fmt.Println("Error decoding JSON:", err)
-	// 	return
-	// }
+	if !helpers.DirExists(config.BuildTools) {
+		fmt.Printf("Build Tools directory not found, setting to default: %s\n", defaultConfig.BuildTools)
+		config.BuildTools = defaultConfig.BuildTools
+	}
 
-
-
-	fmt.Printf("apktool: %s\nAdb: %s\nbuildtools: %s\n", config.Apktool, config.Adb, config.BuildTools)
+	return config
 }
+
+func getDefaultConfig() Config {
+	homeDir,_ := os.UserHomeDir()
+	Adb := "/usr/bin/adb";
+	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0";
+	Apktool := "/usr/local/bin/apktool";
+
+	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool }
+}
+// TODO no windows support for now
+// if strings.Contains(runtime.GOOS, "windows") {
+// 	adbDefaultPath = "C:\\Android\\platform-tools\\adb.exe"
+// 	buildToolsPath = "C:\Android\platform-tools
+// }

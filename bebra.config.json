@@ -1,5 +1,5 @@
 {
   "apktool": "/usr/local/bin/apktool",
   "adb": "/usr/bin/adb",
-  "buildTools": "~/Android/Sdk/build-tools/35.0.0"
+  "buildTools": "/home/almaz/Android/Sdk/build-tools/35.0.0"
 }

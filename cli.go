@@ -21,7 +21,8 @@ func printUsage() {
 }
 
 func main() {
-	config.GetConfig()
+	conf := config.GetConfig()
+	fmt.Println(conf)
 	if len(os.Args) < 2 {
 		// printUsage()
 		os.Exit(1)
