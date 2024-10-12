@@ -27,7 +27,6 @@ func compileHandler(cmd *cobra.Command, args []string) {
     conf := config.GetConfig(configPath)
 	fmt.Println(conf)
 
-
     fmt.Println("Compiling the application...")
     fmt.Println("Using config path:", configPath)
 }

@@ -26,6 +26,15 @@ func DirExists(dirname string) bool {
     return err == nil && info.IsDir() 
 }
 
+func CreateFile(name string) *os.File {
+    file, err := os.Create(name)
+	if err != nil {
+		fmt.Println("Error creating file:", err)
+		os.Exit(1)
+	}
+    return file
+}
+
 func isStatExist(path string) (os.FileInfo, error) {
     info, err := os.Stat(path)
     if err != nil {
@@ -35,6 +44,7 @@ func isStatExist(path string) (os.FileInfo, error) {
 }
 
 func checkPathPrefix(path string) bool {
+    // for linux
     if strings.HasPrefix(path, "~") {
         fmt.Printf("Replace '~' prefix with your home directory: %s\n", path)
         return false

@@ -14,6 +14,8 @@ var rootCmd = &cobra.Command{
 func Init() {
     rootCmd.AddCommand(compileCmd)
     rootCmd.AddCommand(decompileCmd)
+    rootCmd.AddCommand(initializeCmd)
+    rootCmd.AddCommand(zipCommand, unzipCommand)
 }
 
 func Execute() {

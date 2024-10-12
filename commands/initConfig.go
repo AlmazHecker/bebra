@@ -1,6 +1,11 @@
 package commands
 
 import (
+	"bebra/config"
+	"bebra/helpers"
+	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -11,21 +16,22 @@ var initializeCmd = &cobra.Command{
 }
 
 func initializeHandler(cmd *cobra.Command, args []string) {
+	newConfig := config.Config{
+		Apktool: "apktool-path",
+		Adb: "adb-path",
+		BuildTools: "build-tools-dir-path",
+	}
 
-	// here will be code that creates new bebra.config.json with comments
+	if helpers.FileExists("bebra.config.json") {
+		fmt.Println("Bebra config already exists!")
+		os.Exit(1)
+	}
 
-	// configPath, _ := cmd.Flags().GetString("config")
-	// if !helpers.FileExists(configPath) {
-	// 	println("Config is not defined! Define bebra.config.json file")
-	// }
+	file := helpers.CreateFile("bebra.config.json")
+	defer file.Close()
 
-	// conf := config.GetConfig(configPath)
-	// fmt.Println(conf)
-
-	// fmt.Println("Decompiling the application...")
-	// fmt.Println("Using config path:", configPath)
+	helpers.JSONEncoder(file, newConfig)
 }
 
 func init() {
-	initializeCmd.Flags().StringP("config", "c", "bebra.config.json", "Specify config path")
 }
