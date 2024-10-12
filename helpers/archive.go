@@ -37,17 +37,14 @@ func Zip(src, dest string) error {
         dest += ".xapk"
     }
 
-    zipFile, err := os.Create(dest)
-    if err != nil {
-        return err
-    }
+    zipFile := CreateFile(dest)
     defer zipFile.Close()
 
     writer := zip.NewWriter(zipFile)
     defer writer.Close()
 
     // Обход файлов директории
-    err = filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+    err := filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
         if err != nil {
             return err
         }
