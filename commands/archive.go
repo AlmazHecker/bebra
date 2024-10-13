@@ -42,7 +42,7 @@ func init() {
 
 func zipHandler(cmd *cobra.Command, args []string) {
 	if !cmd.Flags().Changed("output") {
-		fmt.Printf("The output is not provided. Output will be saved in %s dir.\n", outputPath)
+		fmt.Printf("The output is not provided. Output will be saved as %s.xapk file.\n", outputPath)
 	}
 
 	if err := helpers.Zip(args[0], outputPath); err != nil {
