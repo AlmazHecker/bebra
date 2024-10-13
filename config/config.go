@@ -6,23 +6,20 @@ import (
 	"os"
 )
 
+// Declare the global configuration variable
+// var BebraConfig Config
 
 type Config struct {
-	Apktool    string `json:"apktool,omitempty"`
-	Adb        string `json:"adb,omitempty"`
-	BuildTools string `json:"buildTools,omitempty"`
-	DecompileOutDir string `json:"decompileOutDir,omitempty"`
-	CompiledOutDir string `json:"CompiledOutDir,omitempty"`
+	Apktool         string `json:"apktool,omitempty"`
+	Adb             string `json:"adb,omitempty"`
+	BuildTools      string `json:"buildTools,omitempty"`
+	DecompiledOutDir string `json:"decompiledOutDir,omitempty"`
+	CompiledOutDir  string `json:"compiledOutDir,omitempty"`
 }
 
-func GetConfig(configPath string) Config {
-	file, err := os.Open(configPath);
-	if err != nil {
-		fmt.Println("Error opening file: %w", err)
-		os.Exit(1)
-	}
+func InitConfig(configPath string) Config {
+	file, _ := os.Open(configPath)
 	defer file.Close()
-
 
 	var config Config
 	helpers.JSONDecoder(file, &config)
@@ -44,8 +41,8 @@ func GetConfig(configPath string) Config {
 		config.BuildTools = defaultConfig.BuildTools
 	}
 
-	if config.DecompileOutDir == "" {
-		config.DecompileOutDir = defaultConfig.DecompileOutDir
+	if config.DecompiledOutDir == "" {
+		config.DecompiledOutDir = defaultConfig.DecompiledOutDir
 	}
 
 	if config.CompiledOutDir == "" {
@@ -56,15 +53,89 @@ func GetConfig(configPath string) Config {
 }
 
 func getDefaultConfig() Config {
-	homeDir,_ := os.UserHomeDir()
-	Adb := "/usr/bin/adb";
-	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0";
-	Apktool := "/usr/local/bin/apktool";
+	homeDir, _ := os.UserHomeDir()
+	Adb := "/usr/bin/adb"
+	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0"
+	Apktool := "/usr/local/bin/apktool"
 	DecompileOutDir := "./decompiled"
-	CompiledOutDir := "./compiled"
+	CompiledOutDir := "./compiled.apk"
 
-	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool,DecompileOutDir: DecompileOutDir, CompiledOutDir: CompiledOutDir }
+	return Config{
+		Adb:             Adb,
+		BuildTools:      BuildTools,
+		Apktool:         Apktool,
+		DecompiledOutDir: DecompileOutDir,
+		CompiledOutDir:  CompiledOutDir,
+	}
 }
+
+// package config
+
+// import (
+// 	"bebra/helpers"
+// 	"fmt"
+// 	"os"
+// )
+
+
+// type Config struct {
+// 	Apktool    string `json:"apktool,omitempty"`
+// 	Adb        string `json:"adb,omitempty"`
+// 	BuildTools string `json:"buildTools,omitempty"`
+// 	DecompileOutDir string `json:"decompileOutDir,omitempty"`
+// 	CompiledOutDir string `json:"CompiledOutDir,omitempty"`
+// }
+
+// func GetConfig(configPath string) Config {
+// 	file, err := os.Open(configPath);
+// 	if err != nil {
+// 		fmt.Println("Error opening file: %w", err)
+// 		os.Exit(1)
+// 	}
+// 	defer file.Close()
+
+
+// 	var config Config
+// 	helpers.JSONDecoder(file, &config)
+
+// 	var defaultConfig = getDefaultConfig()
+
+// 	if !helpers.FileExists(config.Adb) {
+// 		fmt.Printf("ADB not found, setting to default: %s\n", defaultConfig.Adb)
+// 		config.Adb = defaultConfig.Adb
+// 	}
+
+// 	if !helpers.FileExists(config.Apktool) {
+// 		fmt.Printf("APKTool not found, setting to default: %s\n", defaultConfig.Apktool)
+// 		config.Apktool = defaultConfig.Apktool
+// 	}
+
+// 	if !helpers.DirExists(config.BuildTools) {
+// 		fmt.Printf("Build Tools directory not found, setting to default: %s\n", defaultConfig.BuildTools)
+// 		config.BuildTools = defaultConfig.BuildTools
+// 	}
+
+// 	if config.DecompileOutDir == "" {
+// 		config.DecompileOutDir = defaultConfig.DecompileOutDir
+// 	}
+
+// 	if config.CompiledOutDir == "" {
+// 		config.CompiledOutDir = defaultConfig.CompiledOutDir
+// 	}
+
+// 	return config
+// }
+
+// func getDefaultConfig() Config {
+// 	homeDir,_ := os.UserHomeDir()
+// 	Adb := "/usr/bin/adb";
+// 	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0";
+// 	Apktool := "/usr/local/bin/apktool";
+// 	DecompileOutDir := "./decompiled"
+// 	CompiledOutDir := "./compiled"
+
+// 	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool,DecompileOutDir: DecompileOutDir, CompiledOutDir: CompiledOutDir }
+// }
 
 // TODO no windows support for now
 // if strings.Contains(runtime.GOOS, "windows") {

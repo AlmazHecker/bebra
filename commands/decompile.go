@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bebra/config"
 	"bebra/helpers"
 	"fmt"
 	"log"
@@ -11,9 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// var outputPath string = ""
-
-
 var decompileCmd = &cobra.Command{
     Use:   "decompile [apk file]",
     Short: "Decompile the apk file",
@@ -22,9 +18,6 @@ var decompileCmd = &cobra.Command{
 }
 
 func decompileHanlder(cmd *cobra.Command, args []string) {
-	configPath, _ := cmd.Flags().GetString("config")
-    conf := config.GetConfig(configPath)
-
 	if !helpers.FileExists(args[0]) {
 		fmt.Printf("The given apk file(%s) not found!\n", args[0])
 		os.Exit(1)
@@ -34,21 +27,20 @@ func decompileHanlder(cmd *cobra.Command, args []string) {
 
 	outputPath, _ := cmd.Flags().GetString("output")
 
-    if outputPath == "" {
-		outputPath = conf.DecompileOutDir
+    if !cmd.Flags().Changed("output") {
+		outputPath = BebraConfig.DecompiledOutDir
     }
 
-    osCmd := exec.Command(conf.Apktool, "d", args[0], "-o", outputPath)
+    osCmd := exec.Command(BebraConfig.Apktool, "d", args[0], "-o", outputPath)
     _, err := osCmd.CombinedOutput()
 
 	if err != nil {
         log.Fatalf("Decompilation failed: %s\n", err)
     }
 
-	fmt.Println("Decompilation done!")
+	fmt.Printf("The apk file was decompiled! The output is saved in %s\n", outputPath)
 }
 
 func init() {
-    decompileCmd.Flags().StringP("config", "c", "bebra.config.json", "Specify config path")
     decompileCmd.Flags().StringP("output", "o", "", "The output of decompiled apk")
 }

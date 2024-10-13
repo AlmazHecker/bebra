@@ -1,7 +1,6 @@
 package commands
 
 import (
-	"bebra/config"
 	"bebra/helpers"
 	"fmt"
 	"log"
@@ -11,7 +10,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
 var compileCmd = &cobra.Command{
     Use:   "compile [decompiled-apk-dir]",
     Short: "Compile the application",
@@ -20,9 +18,6 @@ var compileCmd = &cobra.Command{
 }
 
 func compileHandler(cmd *cobra.Command, args []string) {
-	configPath, _ := cmd.Flags().GetString("config")
-    conf := config.GetConfig(configPath)
-
 	if !helpers.DirExists(args[0]) {
 		fmt.Printf("The given dir(%s) not found!\n", args[0])
         os.Exit(1)
@@ -32,21 +27,20 @@ func compileHandler(cmd *cobra.Command, args []string) {
 
 	outputPath, _ := cmd.Flags().GetString("output")
 	
-    if outputPath == "" {
-		outputPath = conf.CompiledOutDir
+	if !cmd.Flags().Changed("output") {
+		outputPath = BebraConfig.CompiledOutDir
     }
 
-    osCmd := exec.Command(conf.Apktool, "b", args[0], "-o", outputPath)
+    osCmd := exec.Command(BebraConfig.Apktool, "b", args[0], "-o", outputPath)
     _, err := osCmd.CombinedOutput()
 
 	if err != nil {
         log.Fatalf("Compilation failed: %s\n", err)
     }
 
-	fmt.Println("Compilation done!")
+	fmt.Printf("The APK file is compiled! The output is saved in %s\n", outputPath)
 }
 
 func init() {
-    compileCmd.Flags().StringP("config", "c", "bebra.config.json", "Specify config path")
-    compileCmd.Flags().StringP("output", "o", "./compiled.apk", "The output of decompiled apk")
+    compileCmd.Flags().StringP("output", "o", "", "The output of decompiled apk")
 }

@@ -30,7 +30,6 @@ func unzipHandler(cmd *cobra.Command, args []string) {
 		fmt.Printf("The output is not provided. Output will be saved in %s dir.\n", outputPath)
 	}
 
-	fmt.Println(outputPath)
 	helpers.Unzip(args[0], outputPath)
 
 	fmt.Printf("Unzipped. The output is in %s dir", outputPath)

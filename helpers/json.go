@@ -9,8 +9,10 @@ import (
 
 func JSONDecoder(reader io.Reader, v interface{}) error {
     decoder := json.NewDecoder(reader)
+	decoder.DisallowUnknownFields()
     if err := decoder.Decode(v); err != nil {
-        return fmt.Errorf("error decoding JSON: %v", err)
+        fmt.Printf("error decoding JSON: %v\n", err)
+		os.Exit(1)
     }
     return nil
 }
