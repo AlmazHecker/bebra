@@ -5,11 +5,13 @@ import (
 	"bebra/helpers"
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 
 	"github.com/spf13/cobra"
 )
 
+// var outputPath string = ""
 
 
 var decompileCmd = &cobra.Command{
@@ -21,20 +23,17 @@ var decompileCmd = &cobra.Command{
 
 func decompileHanlder(cmd *cobra.Command, args []string) {
 	configPath, _ := cmd.Flags().GetString("config")
-
-    if !helpers.FileExists(configPath) {
-        println("Config is not defined! Define bebra.config.json file")
-    } 
-
     conf := config.GetConfig(configPath)
+
 	if !helpers.FileExists(args[0]) {
 		fmt.Printf("The given apk file(%s) not found!\n", args[0])
+		os.Exit(1)
 	}
 
 	fmt.Println("Decompilation started...")
 
 	outputPath, _ := cmd.Flags().GetString("output")
-	
+
     if outputPath == "" {
 		outputPath = conf.DecompileOutDir
     }

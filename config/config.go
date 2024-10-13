@@ -12,6 +12,7 @@ type Config struct {
 	Adb        string `json:"adb,omitempty"`
 	BuildTools string `json:"buildTools,omitempty"`
 	DecompileOutDir string `json:"decompileOutDir,omitempty"`
+	CompiledOutDir string `json:"CompiledOutDir,omitempty"`
 }
 
 func GetConfig(configPath string) Config {
@@ -47,6 +48,10 @@ func GetConfig(configPath string) Config {
 		config.DecompileOutDir = defaultConfig.DecompileOutDir
 	}
 
+	if config.CompiledOutDir == "" {
+		config.CompiledOutDir = defaultConfig.CompiledOutDir
+	}
+
 	return config
 }
 
@@ -56,8 +61,9 @@ func getDefaultConfig() Config {
 	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0";
 	Apktool := "/usr/local/bin/apktool";
 	DecompileOutDir := "./decompiled"
+	CompiledOutDir := "./compiled"
 
-	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool,DecompileOutDir: DecompileOutDir }
+	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool,DecompileOutDir: DecompileOutDir, CompiledOutDir: CompiledOutDir }
 }
 
 // TODO no windows support for now

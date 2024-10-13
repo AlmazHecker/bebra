@@ -33,5 +33,3 @@ func initializeHandler(cmd *cobra.Command, args []string) {
 	helpers.JSONEncoder(file, newConfig)
 }
 
-func init() {
-}

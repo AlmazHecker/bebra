@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var outputPath string = "./out"
 
 var unzipCommand = &cobra.Command{
     Use:   "unzip [xapk]",
@@ -25,6 +24,8 @@ var zipCommand = &cobra.Command{
 
 
 func unzipHandler(cmd *cobra.Command, args []string) {
+	outputPath, _ := cmd.Flags().GetString("output")
+
 	if !cmd.Flags().Changed("output") {
 		fmt.Printf("The output is not provided. Output will be saved in %s dir.\n", outputPath)
 	}
@@ -35,12 +36,9 @@ func unzipHandler(cmd *cobra.Command, args []string) {
 	fmt.Printf("Unzipped. The output is in %s dir", outputPath)
 }
 
-func init() {
-    unzipCommand.Flags().StringVarP(&outputPath, "output", "o", outputPath, "Specify output directory")
-    zipCommand.Flags().StringVarP(&outputPath, "output", "o", outputPath, "Specify output directory")
-}
-
 func zipHandler(cmd *cobra.Command, args []string) {
+	outputPath, _ := cmd.Flags().GetString("output")
+
 	if !cmd.Flags().Changed("output") {
 		fmt.Printf("The output is not provided. Output will be saved as %s.xapk file.\n", outputPath)
 	}
@@ -51,4 +49,10 @@ func zipHandler(cmd *cobra.Command, args []string) {
 	}
 	fmt.Printf("Zipped. The output is in %s dir", outputPath)
 
+}
+
+
+func init() {
+    unzipCommand.Flags().StringP("output", "o", "./unzipped", "Specify output directory")
+    zipCommand.Flags().StringP("output", "o", "./android.xapk", "Specify output directory")
 }
