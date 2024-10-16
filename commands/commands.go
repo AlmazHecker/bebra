@@ -27,6 +27,7 @@ func Init() {
     rootCmd.AddCommand(compileCmd)
     rootCmd.AddCommand(decompileCmd)
     rootCmd.AddCommand(initializeCmd)
+    rootCmd.AddCommand(keystoreCmd)
     rootCmd.AddCommand(zipCommand, unzipCommand)
 
 
