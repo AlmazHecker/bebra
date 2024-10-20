@@ -6,139 +6,58 @@ import (
 	"os"
 )
 
-// Declare the global configuration variable
-// var BebraConfig Config
-
 type Config struct {
-	Apktool         string `json:"apktool,omitempty"`
-	Adb             string `json:"adb,omitempty"`
-	BuildTools      string `json:"buildTools,omitempty"`
-	DecompiledOutDir string `json:"decompiledOutDir,omitempty"`
-	CompiledOutDir  string `json:"compiledOutDir,omitempty"`
+	Apktool         string `json:"apktool"`
+	Adb             string `json:"adb"`
+	Signer          string `json:"signer"`
+	DecompiledOutDir string `json:"decompiledOutDir"`
+	CompiledOutDir  string `json:"compiledOutDir"`
+}
+
+func (c *Config) Validate() []string {
+	var missing []string
+
+	if c.Apktool == "" || !helpers.FileExists(c.Apktool){
+		missing = append(missing, "apktool")
+	}
+	if c.Adb == "" || !helpers.FileExists(c.Adb){
+		missing = append(missing, "adb")
+	}
+	if c.Signer == "" || !helpers.FileExists(c.Signer) {
+		missing = append(missing, "apksigner")
+	}
+
+	return missing
 }
 
 func InitConfig(configPath string) Config {
-	file, _ := os.Open(configPath)
+	file, err := os.Open(configPath)
+	if err != nil {
+		helpers.ErrorLog(fmt.Sprintf("Error opening config file: %v\n", err))
+		os.Exit(1)
+	}
 	defer file.Close()
 
 	var config Config
-	helpers.JSONDecoder(file, &config)
-
-	var defaultConfig = getDefaultConfig()
-
-	if !helpers.FileExists(config.Adb) {
-		fmt.Printf("ADB not found, setting to default: %s\n", defaultConfig.Adb)
-		config.Adb = defaultConfig.Adb
+	if err := helpers.JSONDecoder(file, &config); err != nil {
+		helpers.ErrorLog("Error reading config file!")
+		os.Exit(1)
 	}
 
-	if !helpers.FileExists(config.Apktool) {
-		fmt.Printf("APKTool not found, setting to default: %s\n", defaultConfig.Apktool)
-		config.Apktool = defaultConfig.Apktool
-	}
-
-	if !helpers.DirExists(config.BuildTools) {
-		fmt.Printf("Build Tools directory not found, setting to default: %s\n", defaultConfig.BuildTools)
-		config.BuildTools = defaultConfig.BuildTools
+	missing := config.Validate()
+	if len(missing) > 0 {
+		helpers.WarningLog(fmt.Sprintf(
+			"Some variables are missing or have incorrect locations in the config: %v\n"+
+			"This is okay, but it may cause the program to work incorrectly.", missing))
 	}
 
 	if config.DecompiledOutDir == "" {
-		config.DecompiledOutDir = defaultConfig.DecompiledOutDir
+		config.DecompiledOutDir = "./decompiled"
 	}
-
 	if config.CompiledOutDir == "" {
-		config.CompiledOutDir = defaultConfig.CompiledOutDir
+		config.CompiledOutDir = "./build.apk"
 	}
 
 	return config
 }
 
-func getDefaultConfig() Config {
-	homeDir, _ := os.UserHomeDir()
-	Adb := "/usr/bin/adb"
-	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0"
-	Apktool := "/usr/local/bin/apktool"
-	DecompileOutDir := "./decompiled"
-	CompiledOutDir := "./compiled.apk"
-
-	return Config{
-		Adb:             Adb,
-		BuildTools:      BuildTools,
-		Apktool:         Apktool,
-		DecompiledOutDir: DecompileOutDir,
-		CompiledOutDir:  CompiledOutDir,
-	}
-}
-
-// package config
-
-// import (
-// 	"bebra/helpers"
-// 	"fmt"
-// 	"os"
-// )
-
-
-// type Config struct {
-// 	Apktool    string `json:"apktool,omitempty"`
-// 	Adb        string `json:"adb,omitempty"`
-// 	BuildTools string `json:"buildTools,omitempty"`
-// 	DecompileOutDir string `json:"decompileOutDir,omitempty"`
-// 	CompiledOutDir string `json:"CompiledOutDir,omitempty"`
-// }
-
-// func GetConfig(configPath string) Config {
-// 	file, err := os.Open(configPath);
-// 	if err != nil {
-// 		fmt.Println("Error opening file: %w", err)
-// 		os.Exit(1)
-// 	}
-// 	defer file.Close()
-
-
-// 	var config Config
-// 	helpers.JSONDecoder(file, &config)
-
-// 	var defaultConfig = getDefaultConfig()
-
-// 	if !helpers.FileExists(config.Adb) {
-// 		fmt.Printf("ADB not found, setting to default: %s\n", defaultConfig.Adb)
-// 		config.Adb = defaultConfig.Adb
-// 	}
-
-// 	if !helpers.FileExists(config.Apktool) {
-// 		fmt.Printf("APKTool not found, setting to default: %s\n", defaultConfig.Apktool)
-// 		config.Apktool = defaultConfig.Apktool
-// 	}
-
-// 	if !helpers.DirExists(config.BuildTools) {
-// 		fmt.Printf("Build Tools directory not found, setting to default: %s\n", defaultConfig.BuildTools)
-// 		config.BuildTools = defaultConfig.BuildTools
-// 	}
-
-// 	if config.DecompileOutDir == "" {
-// 		config.DecompileOutDir = defaultConfig.DecompileOutDir
-// 	}
-
-// 	if config.CompiledOutDir == "" {
-// 		config.CompiledOutDir = defaultConfig.CompiledOutDir
-// 	}
-
-// 	return config
-// }
-
-// func getDefaultConfig() Config {
-// 	homeDir,_ := os.UserHomeDir()
-// 	Adb := "/usr/bin/adb";
-// 	BuildTools := homeDir + "/Android/Sdk/build-tools/35.0.0";
-// 	Apktool := "/usr/local/bin/apktool";
-// 	DecompileOutDir := "./decompiled"
-// 	CompiledOutDir := "./compiled"
-
-// 	return Config{ Adb: Adb, BuildTools: BuildTools, Apktool: Apktool,DecompileOutDir: DecompileOutDir, CompiledOutDir: CompiledOutDir }
-// }
-
-// TODO no windows support for now
-// if strings.Contains(runtime.GOOS, "windows") {
-// 	adbDefaultPath = "C:\\Android\\platform-tools\\adb.exe"
-// 	buildToolsPath = "C:\Android\platform-tools
-// }

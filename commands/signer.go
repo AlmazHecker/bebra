@@ -1,5 +1,3 @@
-// NOT TESTED YET
-
 package commands
 
 import (
@@ -32,7 +30,7 @@ func signerHandler(cmd *cobra.Command, args []string) {
         os.Exit(1)
     }
 
-    if err := helpers.Signer(args[0], output, keystore, BebraConfig.BuildTools); err != nil {
+    if err := helpers.Signer(args[0], output, keystore, BebraConfig.Signer); err != nil {
         log.Fatalf("Error signing APK: %v", err)
         os.Exit(1)
     }

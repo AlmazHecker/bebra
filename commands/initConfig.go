@@ -19,7 +19,8 @@ func initializeHandler(cmd *cobra.Command, args []string) {
 	newConfig := config.Config{
 		Apktool: "apktool-path",
 		Adb: "adb-path",
-		BuildTools: "build-tools-dir-path",
+		Signer: "apk-signer",
+		DecompiledOutDir: "decompiled code out dir(not required)",
 	}
 
 	if helpers.FileExists("bebra.config.json") {
@@ -31,5 +32,7 @@ func initializeHandler(cmd *cobra.Command, args []string) {
 	defer file.Close()
 
 	helpers.JSONEncoder(file, newConfig)
+
+	println("Config has been created!")
 }
 

@@ -12,7 +12,7 @@ func JSONDecoder(reader io.Reader, v interface{}) error {
 	decoder.DisallowUnknownFields()
     if err := decoder.Decode(v); err != nil {
         fmt.Printf("error decoding JSON: %v\n", err)
-		os.Exit(1)
+		return err
     }
     return nil
 }

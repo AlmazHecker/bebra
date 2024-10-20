@@ -5,10 +5,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 )
 
-func Signer(inputFolder string, outputFolder string, keystore string, buildToolsDir string) error {
+func Signer(inputFolder string, outputFolder string, keystore string, signer string) error {
     files, err := filepath.Glob(filepath.Join(inputFolder, "*.apk"))
     if err != nil {
         fmt.Printf("Error reading APK files: %s\n", err)
@@ -21,7 +20,7 @@ func Signer(inputFolder string, outputFolder string, keystore string, buildTools
         outputFile := filepath.Join(outputFolder, filepath.Base(file))
 
         fmt.Println(file, outputFile, keystore)
-		execCmd := signerCmd(file, outputFile, keystore, buildToolsDir)
+		execCmd := signerCmd(file, outputFile, keystore, signer)
 
         execCmd.Stdin = os.Stdin
         execCmd.Stdout = os.Stdout
@@ -36,18 +35,18 @@ func Signer(inputFolder string, outputFolder string, keystore string, buildTools
     return err;
 }
 
-func signerCmd(file string, outputFile string, keystore string, buildToolsDir string) *exec.Cmd {
-    var apkSignerFile string
+func signerCmd(file string, outputFile string, keystore string, signer string) *exec.Cmd {
+    // var apkSignerFile string
 
-    if runtime.GOOS == "windows" {
-        apkSignerFile = filepath.Join(buildToolsDir, "apksigner.bat")
-    } else {
-        apkSignerFile = filepath.Join(buildToolsDir, "apksigner.sh")
-    }
-    if !FileExists(apkSignerFile) {
-        fmt.Printf("File doesn't exist", buildToolsDir)
-        os.Exit(1)
-    }
+    // if runtime.GOOS == "windows" {
+    //     apkSignerFile = filepath.Join(buildToolsDir, "apksigner.bat")
+    // } else {
+    //     apkSignerFile = filepath.Join(buildToolsDir, "apksigner.sh")
+    // }
+    // if !FileExists(apkSignerFile) {
+    //     fmt.Printf("File doesn't exist", buildToolsDir)
+    //     os.Exit(1)
+    // }
 
     outputDir := filepath.Dir(outputFile)
     if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
@@ -55,5 +54,5 @@ func signerCmd(file string, outputFile string, keystore string, buildToolsDir st
        return nil
     }
 
-	return exec.Command(apkSignerFile, "sign", "--ks", keystore, "--ks-pass", "pass:random", "--out", outputFile, file)
+	return exec.Command(signer, "sign", "--ks", keystore, "--ks-pass", "pass:random", "--out", outputFile, file)
 }
