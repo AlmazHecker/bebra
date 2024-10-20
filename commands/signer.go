@@ -7,48 +7,45 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"os/exec"
 
 	"github.com/spf13/cobra"
 )
 
-var SignerCmd = &cobra.Command{
-    Use:   "signer [apk]",
+var signerCmd = &cobra.Command{
+    Use:   "signer [dir with apk]",
     Short: "A tool to sign APK files",
     Args: cobra.ExactArgs(1),
     Run: signerHandler,
 }
 
 func signerHandler(cmd *cobra.Command, args []string) {
-	if !helpers.FileExists(args[0]) {
+	if !helpers.DirExists(args[0]) {
 		fmt.Printf("The given file(%s) not found!\n", args[0])
         os.Exit(1)
 	}
 
-    input, _ := cmd.Flags().GetString("input")
     output, _ := cmd.Flags().GetString("output")
     keystore, _ := cmd.Flags().GetString("keystore")
 
-    if err := signAPK(input, output, keystore); err != nil {
-        log.Fatalf("Error signing APK: %v", err)
+    if !helpers.FileExists(keystore) {
+        fmt.Printf("The keystore file not found!")
+        os.Exit(1)
     }
+
+    if err := helpers.Signer(args[0], output, keystore, BebraConfig.BuildTools); err != nil {
+        log.Fatalf("Error signing APK: %v", err)
+        os.Exit(1)
+    }
+
     fmt.Println("APK signed successfully:", output)
 
 }
 
 
-func signAPK(inputAPK, outputAPK, keystore string) error {
-    cmd := exec.Command("apksigner", "sign", "--ks", keystore, "--out", outputAPK, inputAPK)
-    return cmd.Run()
-}
-
 func init() {
+    signerCmd.Flags().StringP("keystore", "k", "", "Path to the keystore (JKS file)")
+    signerCmd.Flags().StringP("output", "o", "./signed_apks", "Path for the output signed APK files")
 
-    rootCmd.Flags().StringP("kestore", "k", "", "Path to the keystore (JKS file)")
-    rootCmd.Flags().StringP("input", "i", "", "Path to the input APK file")
-    rootCmd.Flags().StringP("output", "o", "signed_app.apk", "Path for the output signed APK file")
-
-    rootCmd.MarkFlagRequired("ks")
-    rootCmd.MarkFlagRequired("input")
+    signerCmd.MarkFlagRequired("k")
 
 }
