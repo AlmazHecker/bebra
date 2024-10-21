@@ -36,18 +36,6 @@ func Signer(inputFolder string, outputFolder string, keystore string, signer str
 }
 
 func signerCmd(file string, outputFile string, keystore string, signer string) *exec.Cmd {
-    // var apkSignerFile string
-
-    // if runtime.GOOS == "windows" {
-    //     apkSignerFile = filepath.Join(buildToolsDir, "apksigner.bat")
-    // } else {
-    //     apkSignerFile = filepath.Join(buildToolsDir, "apksigner.sh")
-    // }
-    // if !FileExists(apkSignerFile) {
-    //     fmt.Printf("File doesn't exist", buildToolsDir)
-    //     os.Exit(1)
-    // }
-
     outputDir := filepath.Dir(outputFile)
     if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
         fmt.Printf("Failed to create output directory: %s\n", err)

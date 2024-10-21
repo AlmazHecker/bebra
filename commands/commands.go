@@ -14,7 +14,7 @@ var BebraConfig config.Config
 
 var rootCmd = &cobra.Command{
     Use:   "bebra",
-    Short: "A command-line application",
+    Short: "CLI to automate reverse engineering of APK files",
     PersistentPreRun: func(cmd *cobra.Command, args []string) {
 		BebraConfig = config.InitConfig(configPath)
 	},
@@ -30,8 +30,6 @@ func Init() {
     rootCmd.AddCommand(keystoreCmd)
     rootCmd.AddCommand(signerCmd)
     rootCmd.AddCommand(zipCommand, unzipCommand)
-
-
 }
 
 func Execute() {
