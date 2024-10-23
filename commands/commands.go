@@ -29,7 +29,7 @@ func Init() {
     rootCmd.AddCommand(initializeCmd)
     rootCmd.AddCommand(keystoreCmd)
     rootCmd.AddCommand(signerCmd)
-    rootCmd.AddCommand(zipCommand, unzipCommand)
+    rootCmd.AddCommand(unzipXAPKCmd)
 }
 
 func Execute() {
