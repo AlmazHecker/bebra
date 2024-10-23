@@ -30,6 +30,7 @@ func Init() {
     rootCmd.AddCommand(keystoreCmd)
     rootCmd.AddCommand(signerCmd)
     rootCmd.AddCommand(unzipXAPKCmd)
+    rootCmd.AddCommand(installAPKCmd)
 }
 
 func Execute() {

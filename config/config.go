@@ -44,6 +44,16 @@ func InitConfig(configPath string) Config {
 		os.Exit(1)
 	}
 
+	if config.Apktool == "" {
+		config.Apktool = helpers.FindinSystemPath("apktool")
+	}
+	if config.Adb == "" {
+		config.Adb = helpers.FindinSystemPath("adb")
+	}
+	if config.Signer == "" {
+		config.Signer = helpers.FindinSystemPath("apksigner")
+	}
+
 	missing := config.Validate()
 	if len(missing) > 0 {
 		helpers.WarningLog(fmt.Sprintf(

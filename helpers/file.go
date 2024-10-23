@@ -3,6 +3,8 @@ package helpers
 import (
 	"fmt"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strings"
 )
 
@@ -50,4 +52,21 @@ func checkPathPrefix(path string) bool {
         return false
     }
     return true
+}
+
+func FindinSystemPath(executable string) string {
+	path, err := exec.LookPath(executable)
+	if err != nil {
+		return ""
+	}
+	return path
+}
+
+func TraverseDir(folder string, callback func(string, os.FileInfo) error) error {
+	return filepath.Walk(folder, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		return callback(path, info)
+	})
 }

@@ -15,7 +15,7 @@ Go and Cobra
 
 ### Prerequisites
 
-You need to install APKTool and Android SDK Tools
+You need to install APKTool and ADB & APKSigner from Android SDK
 
 ## Installation Guide
 
