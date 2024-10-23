@@ -30,8 +30,6 @@ There are 2 ways to install bebra.
 ./bebra.
 ```
 
-3. You can add it to PATH to make it accessible anywhere.
-
 #### Advanced installation
 
 You have to install Golang.
