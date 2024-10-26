@@ -23,13 +23,14 @@ func signerHandler(cmd *cobra.Command, args []string) {
 
     output, _ := cmd.Flags().GetString("output")
     keystore, _ := cmd.Flags().GetString("keystore")
+    pass, _ := cmd.Flags().GetString("keystore")
 
     if !helpers.FileExists(keystore) {
         helpers.ErrorLog("The keystore file not found!")
         os.Exit(1)
     }
 
-    if err := helpers.Signer(args[0], output, keystore, BebraConfig.Signer); err != nil {
+    if err := helpers.Signer(args[0], output, keystore, BebraConfig.Signer, pass); err != nil {
         helpers.ErrorLog(fmt.Sprintf("Error signing APK: %v", err))
         os.Exit(1)
     }
@@ -41,8 +42,10 @@ func signerHandler(cmd *cobra.Command, args []string) {
 
 func init() {
     signerCmd.Flags().StringP("keystore", "k", "", "Path to the keystore (JKS file)")
+    signerCmd.Flags().StringP("pass", "p", "", "keystore password")
     signerCmd.Flags().StringP("output", "o", "./signed_apks", "Path for the output signed APK files")
 
     signerCmd.MarkFlagRequired("k")
+    signerCmd.MarkFlagRequired("p")
 
 }
