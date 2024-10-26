@@ -3,7 +3,6 @@ package commands
 import (
 	"bebra/helpers"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -26,12 +25,12 @@ func signerHandler(cmd *cobra.Command, args []string) {
     keystore, _ := cmd.Flags().GetString("keystore")
 
     if !helpers.FileExists(keystore) {
-        fmt.Printf("The keystore file not found!")
+        helpers.ErrorLog("The keystore file not found!")
         os.Exit(1)
     }
 
     if err := helpers.Signer(args[0], output, keystore, BebraConfig.Signer); err != nil {
-        log.Fatalf("Error signing APK: %v", err)
+        helpers.ErrorLog(fmt.Sprintf("Error signing APK: %v", err))
         os.Exit(1)
     }
 

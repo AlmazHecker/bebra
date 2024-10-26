@@ -13,7 +13,14 @@ for PLATFORM in "${PLATFORMS[@]}"; do
 
     mkdir -p "$OUTPUT_DIR"
 
-    GOOS=$OS GOARCH=$ARCH go build -o "$OUTPUT_DIR/$APP_NAME"
+    # Determine the appropriate file extension
+    if [[ "$OS" == "windows" ]]; then
+        EXT=".exe"
+    else
+        EXT=""
+    fi
+
+    GOOS=$OS GOARCH=$ARCH go build -o "$OUTPUT_DIR/$APP_NAME$EXT"
 
     echo "Built $APP_NAME for $OS/$ARCH in $OUTPUT_DIR"
 done
