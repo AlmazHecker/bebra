@@ -22,7 +22,6 @@ func initializeHandler(cmd *cobra.Command, args []string) {
 		Signer: "apk-signer",
 		DecompiledOutDir: "decompiled code out dir(not required)",
 	}
-
 	if helpers.FileExists("bebra.config.json") {
 		fmt.Println("Bebra config already exists!")
 		os.Exit(1)
@@ -36,3 +35,5 @@ func initializeHandler(cmd *cobra.Command, args []string) {
 	println("Config has been created!")
 }
 
+
+  

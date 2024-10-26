@@ -16,9 +16,12 @@ var rootCmd = &cobra.Command{
     Use:   "bebra",
     Short: "CLI to automate reverse engineering of APK files",
     PersistentPreRun: func(cmd *cobra.Command, args []string) {
+        // if it's init command, then skip bebra.config.json check
+        if cmd.Use == initializeCmd.Name() {
+            return
+        }
 		BebraConfig = config.InitConfig(configPath)
 	},
-
 }
 
 func Init() {
