@@ -4,10 +4,10 @@ This is a tool to automate reverse engineering of APK files. It can:
 
 1. Decompile APK
 2. Compile
-3. Extract APK from XAPK
-4. Build XAPK from dir with given APKs
-5. Create keystore.jks
-6. Multi sign of APK files
+3. Extract APKs from XAPK
+4. Create keystore.jks
+5. Multi sign of APK files
+6. Install multiple APK files
 
 ### Built With
 
@@ -71,3 +71,11 @@ Run
 ```bash
 bebra --help
 ```
+
+## HELP NEEDED!
+
+Bebra currently depends on tools like ADB, apksigner and APKTool.
+It would be great if we could implement tools like ADB and apksigner natively!
+Because in order to install them we need to install whole Android SDK ):<
+
+I also need help with the documentation for this project. XD
