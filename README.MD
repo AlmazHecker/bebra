@@ -9,40 +9,24 @@ This is a tool to automate reverse engineering of APK files. It can:
 5. Multi sign of APK files
 6. Install multiple APK files
 
-### Built With
-
-Go and Cobra
-
-### Prerequisites
+### Requirements
 
 You need to install APKTool and ADB & APKSigner from Android SDK
 
 ## Installation Guide
 
-There are 2 ways to install bebra.
+> **NOTE:** Windows detects this file as a virus, but it's not!
 
-#### Simple installation
-
-1. Download from bin directory build that supports your PC
-2. Then you can run it in CMD or Bash:
+1. Download bebra [here](https://github.com/AlmazHecker/bebra/releases)
+2. Unzip the archive
+3. Then you can run it in CMD or Bash:
 
 ```sh
-./bebra.
-```
+# For Linux
+./bebra --help
 
-#### Advanced installation
-
-You have to install Golang.
-
-1. Clone the repo
-2. Compile to binaries
-   ```sh
-   ./scripts/build.sh
-   ```
-3. Choose binary that's right for your PC & run it:
-
-```bash
- ./bebra
+# For Windows
+./bebra.exe --help
 ```
 
 ## After installation
@@ -79,3 +63,9 @@ It would be great if we could implement tools like ADB and apksigner natively!
 Because in order to install them we need to install whole Android SDK ):<
 
 I also need help with the documentation for this project. XD
+
+## Why I choose Golang ?
+
+1. It's cross-platform
+2. Compiles into native binaries(no dependencies needed from user)
+3. if err != nil XD
