@@ -1,5 +1,4 @@
 out*
 apk
 bebra.config.json
-bin/gopls
-bin/staticcheck
+bin
