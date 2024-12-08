@@ -39,12 +39,14 @@ func collectAPKFiles(inputPath string) []string {
 	info, err := os.Stat(inputPath)
 	if err != nil {
 		helpers.ErrorLog(fmt.Sprintf("Cannot read given input %s", err))
+		os.Exit(1)
 	}
 
 	if info.IsDir() {
 		err := helpers.TraverseDir(inputPath, collectAPKFilesCallback(&apks))
 		if err != nil {
 			helpers.ErrorLog(fmt.Sprintf("Error traversing directory: %v\n", err))
+			os.Exit(1)
 		}
 	} else {
 		if filepath.Ext(info.Name()) == ".apk" {
@@ -73,10 +75,15 @@ func installMultipleAPKs(apks []string) error {
 
 	fmt.Printf("Running command: %s\n", cmd.String())
 
-	_, err := cmd.CombinedOutput()
+	output, err := cmd.CombinedOutput()
+
+	if len(output) > 0 {
+		fmt.Printf("Command output:\n%s\n", string(output))
+	}
+
 	if err != nil {
 		helpers.ErrorLog(fmt.Sprintf("ADB install failed: %v\n", err))
-		return err
+		os.Exit(1)
 	}
 
 	return nil

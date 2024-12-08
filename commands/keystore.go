@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	"os"
 	"time"
 
 	"github.com/pavlo-v-chernykh/keystore-go/v4"
@@ -22,7 +23,6 @@ var keystoreCmd = &cobra.Command{
 	Short: "Keystore Tool is a CLI tool to create and manage Java KeyStores.",
 	Run:   createKeyStore,
 }
-
 
 func init() {
 	keystoreCmd.Flags().StringP("password", "p", "", "Password for the keystore (required)")
@@ -86,12 +86,14 @@ func createKeyStore(cmd *cobra.Command, args []string) {
 	privateKey, certBytes, err := generateKeyPair()
 	if err != nil {
 		log.Fatalf("Failed to generate key pair: %v", err)
+		os.Exit(1)
 	}
 
 	// Marshal private key to PKCS#8
 	privateKeyBytes, err := x509.MarshalPKCS8PrivateKey(privateKey)
 	if err != nil {
 		log.Fatalf("Failed to marshal private key: %v", err)
+		os.Exit(1)
 	}
 
 	// Initialize keystore
@@ -99,19 +101,15 @@ func createKeyStore(cmd *cobra.Command, args []string) {
 
 	// Create PrivateKeyEntry
 	pkeIn := keystore.PrivateKeyEntry{
-		CreationTime: time.Now(),
-		PrivateKey:   privateKeyBytes,
-		CertificateChain: []keystore.Certificate{
-			{
-				Type:    "X509",
-				Content: certBytes,
-			},
-		},
+		CreationTime:     time.Now(),
+		PrivateKey:       privateKeyBytes,
+		CertificateChain: []keystore.Certificate{{Type: "X509", Content: certBytes}},
 	}
 
 	// Add to keystore
 	if err := ks.SetPrivateKeyEntry("my-key-alias", pkeIn, passBytes); err != nil {
-		log.Fatal(err)
+		helpers.ErrorLog(fmt.Sprintf("Set private key entry failed: %v\n", err))
+		os.Exit(1)
 	}
 
 	// Write keystore to file

@@ -17,7 +17,7 @@ var signerCmd = &cobra.Command{
 
 func signerHandler(cmd *cobra.Command, args []string) {
 	if !helpers.DirExists(args[0]) {
-		fmt.Printf("The given file(%s) not found!\n", args[0])
+		helpers.ErrorLog(fmt.Sprintf("The given file(%s) not found!\n", args[0]))
 		os.Exit(1)
 	}
 
