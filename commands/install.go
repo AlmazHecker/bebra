@@ -11,13 +11,13 @@ import (
 )
 
 var installAPKCmd = &cobra.Command{
-    Use:   "install [*.apk OR directory with apks]",
-    Args: cobra.ExactArgs(1),
-    Short: "Install single or splitted apks",
-    Run:   installHandler, 
+	Use:   "install [*.apk OR directory with apks]",
+	Args:  cobra.ExactArgs(1),
+	Short: "Install single or splitted apks",
+	Run:   installHandler,
 }
 
-func installHandler (cmd *cobra.Command, args []string) {
+func installHandler(cmd *cobra.Command, args []string) {
 	apks := collectAPKFiles(args[0])
 	if len(apks) == 0 {
 		fmt.Println("No APK files found.")
@@ -34,14 +34,14 @@ func installHandler (cmd *cobra.Command, args []string) {
 }
 
 func collectAPKFiles(inputPath string) []string {
-    var apks []string
+	var apks []string
 
-    info, err := os.Stat(inputPath)
-    if err != nil {
-        helpers.ErrorLog(fmt.Sprintf("Cannot read given input %s", err))
-    }
+	info, err := os.Stat(inputPath)
+	if err != nil {
+		helpers.ErrorLog(fmt.Sprintf("Cannot read given input %s", err))
+	}
 
-    if info.IsDir() {
+	if info.IsDir() {
 		err := helpers.TraverseDir(inputPath, collectAPKFilesCallback(&apks))
 		if err != nil {
 			helpers.ErrorLog(fmt.Sprintf("Error traversing directory: %v\n", err))
@@ -50,12 +50,12 @@ func collectAPKFiles(inputPath string) []string {
 		if filepath.Ext(info.Name()) == ".apk" {
 			apks = append(apks, inputPath)
 		} else {
-		    helpers.ErrorLog(fmt.Sprintf("The given input is not valid!"))
-            os.Exit(1)
+			helpers.ErrorLog(fmt.Sprintf("The given input is not valid!"))
+			os.Exit(1)
 		}
 	}
 
-    return apks
+	return apks
 }
 
 func collectAPKFilesCallback(apks *[]string) func(string, os.FileInfo) error {
@@ -69,20 +69,18 @@ func collectAPKFilesCallback(apks *[]string) func(string, os.FileInfo) error {
 
 func installMultipleAPKs(apks []string) error {
 	args := append([]string{"install-multiple"}, apks...)
-	cmd := exec.Command("adb", args...)
+	cmd := exec.Command(BebraConfig.Adb, args...) // update this line
 
 	fmt.Printf("Running command: %s\n", cmd.String())
 
 	_, err := cmd.CombinedOutput()
 	if err != nil {
-        helpers.ErrorLog(fmt.Sprintf("ADB install failed: %v\n", err))
+		helpers.ErrorLog(fmt.Sprintf("ADB install failed: %v\n", err))
 		return err
 	}
 
 	return nil
 }
 
-
 func init() {
 }
-
